@@ -27,11 +27,7 @@ Esta API permite realizar as seguintes ações
     ```shell
     docker-compose ./docker/docker-compose.yml up -d
     ```
-## Documentação
+## Documentação e Status
 
-### Serviços
-```
-POST /cartoes (criar cartão)
-GET /cartoes/{numerocartao} (ver saldo do cartão)
-POST /transacoes (realizar transações)
-```
+  * O Swagger pode ser acessado em `/swagger-ui.html`
+  * O Actuator pode ser acessado em `/actuator` 
