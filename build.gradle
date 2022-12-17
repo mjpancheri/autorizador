@@ -2,6 +2,7 @@ plugins {
 	id 'java'
 	id 'org.springframework.boot' version '2.7.6'
 	id 'io.spring.dependency-management' version '1.0.15.RELEASE'
+	id 'org.liquibase.gradle' version '2.1.0'
 }
 
 group = 'com.mjpancheri'
@@ -23,6 +24,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.liquibase:liquibase-core:4.5.0'
 	implementation 'org.springdoc:springdoc-openapi-ui:1.6.9'
 	implementation 'org.springdoc:springdoc-openapi-data-rest:1.6.9'
 	compileOnly 'org.projectlombok:lombok'
@@ -31,8 +33,24 @@ dependencies {
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
+	liquibaseRuntime 'org.liquibase:liquibase-core:4.5.0'
+	liquibaseRuntime 'org.yaml:snakeyaml:1.30'
+	liquibaseRuntime 'org.liquibase:liquibase-groovy-dsl:3.0.2'
+	liquibaseRuntime 'info.picocli:picocli:4.6.3'
+	liquibaseRuntime 'mysql:mysql-connector-java:8.0.28'
 }
 
 tasks.named('test') {
 	useJUnitPlatform()
+}
+
+liquibase {
+	activities {
+		main {
+			changeLogFile "db/migration/changelog-master.yaml"
+			url "$System.env.DB_URL"
+			username "$System.env.DB_USERNAME"
+			password "$System.env.DB_PASSWORD"
+		}
+	}
 }
