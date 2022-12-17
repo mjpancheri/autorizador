@@ -1,0 +1,4 @@
+databaseChangeLog:
+  - include:
+      relativeToChangelogFile: true
+      file: "2022-12-17-18-59-create-cards-table.xml"
