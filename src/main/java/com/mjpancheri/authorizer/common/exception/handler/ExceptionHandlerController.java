@@ -8,6 +8,7 @@ import com.mjpancheri.authorizer.common.exception.InsufficientBalanceException;
 import com.mjpancheri.authorizer.common.exception.PasswordIncorrectException;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -16,16 +17,27 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @AllArgsConstructor
 public class ExceptionHandlerController {
 
+  @ExceptionHandler(MethodArgumentNotValidException.class)
+  @ResponseStatus(HttpStatus.BAD_REQUEST)
+  public String handleMethodArgumentNotValidException(
+      MethodArgumentNotValidException exception) {
+
+    return exception.getFieldErrors()
+        .stream()
+        .map(error -> error.getField() + ": " + error.getDefaultMessage() + "; ")
+        .reduce("", String::concat);
+  }
+
   @ExceptionHandler(CardNotFoundException.class)
   @ResponseStatus(HttpStatus.NOT_FOUND)
-  public void handleCardNotFoundException() {
-
+  public String handleCardNotFoundException() {
+    return "";
   }
 
   @ExceptionHandler(CardNumberConflictException.class)
   @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
-  public CreateCardDto handleCardNumberConflictException(CreateCardDto createCardDto) {
-    return createCardDto;
+  public CreateCardDto handleCardNumberConflictException(CardNumberConflictException exception) {
+    return exception.getPayload();
   }
 
   @ExceptionHandler(CardIncorrectException.class)
