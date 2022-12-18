@@ -4,6 +4,7 @@ import com.mjpancheri.authorizer.cards.application.rest.dto.CreateCardDto;
 import com.mjpancheri.authorizer.common.exception.CardIncorrectException;
 import com.mjpancheri.authorizer.common.exception.CardNotFoundException;
 import com.mjpancheri.authorizer.common.exception.CardNumberConflictException;
+import com.mjpancheri.authorizer.common.exception.ConvertToJsonException;
 import com.mjpancheri.authorizer.common.exception.InsufficientBalanceException;
 import com.mjpancheri.authorizer.common.exception.PasswordIncorrectException;
 import lombok.AllArgsConstructor;
@@ -38,6 +39,12 @@ public class ExceptionHandlerController {
   @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
   public CreateCardDto handleCardNumberConflictException(CardNumberConflictException exception) {
     return exception.getPayload();
+  }
+
+  @ExceptionHandler(ConvertToJsonException.class)
+  @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+  public String handleConvertToJsonException(Exception exception) {
+    return exception.getMessage();
   }
 
   @ExceptionHandler(CardIncorrectException.class)
