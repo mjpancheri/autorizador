@@ -1,9 +1,10 @@
 package com.mjpancheri.authorizer.cards.application.rest.dto;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.mjpancheri.authorizer.cards.domain.Card;
+import com.mjpancheri.authorizer.common.validation.NumbersOnly;
 import java.math.BigDecimal;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -20,20 +21,22 @@ public class CreateCardDto {
   private static final double INITIAL_BALANCE = 500.0;
 
   @NotEmpty(message = "Número do cartão obrigatório")
-  @JsonProperty(value = "numeroCartao")
-  private String number;
+  @Size(min = 16, max = 16, message = "Deve conter 16 digitos")
+  @NumbersOnly
+  private String numeroCartao;
 
   @NotEmpty(message = "Senha obrigatória")
-  @JsonProperty(value = "senha")
-  private String password;
+  @Size(min = 4, max = 4, message = "Deve conter 4 digitos")
+  @NumbersOnly
+  private String senha;
 
 
   public Card toCard() {
     BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
 
     return Card.builder()
-        .number(number)
-        .password(bCryptPasswordEncoder.encode(password))
+        .number(numeroCartao)
+        .password(bCryptPasswordEncoder.encode(senha))
         .balance(BigDecimal.valueOf(INITIAL_BALANCE))
         .build();
   }

@@ -17,8 +17,8 @@ public class CardService {
   private final CardRepository cardRepository;
 
   public CreateCardDto createCard(CreateCardDto createCardDto) {
-    if (cardRepository.existsByNumber(createCardDto.getNumber())) {
-      throw new CardNumberConflictException();
+    if (cardRepository.existsByNumber(createCardDto.getNumeroCartao())) {
+      throw new CardNumberConflictException(createCardDto);
     }
     cardRepository.save(createCardDto.toCard());
     return createCardDto;
