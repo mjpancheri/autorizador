@@ -1,5 +1,6 @@
 package com.mjpancheri.authorizer.cards.domain;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -8,16 +9,18 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-@AllArgsConstructor
-@NoArgsConstructor
+@Builder
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "cards")
 public class Card {
@@ -34,7 +37,7 @@ public class Card {
   private String password;
 
   @Column(name = "balance", nullable = false)
-  private Long balance;
+  private BigDecimal balance;
 
   @Column(name = "created_at", nullable = false, columnDefinition = "DATETIME DEFAULT CURRENT_TIMESTAMP")
   @CreationTimestamp
