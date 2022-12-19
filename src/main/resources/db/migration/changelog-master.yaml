@@ -5,3 +5,6 @@ databaseChangeLog:
   - include:
       relativeToChangelogFile: true
       file: "2022-12-17-22-31-change-balance-type-on-cards-table.xml"
+  - include:
+      relativeToChangelogFile: true
+      file: "2022-12-19-08-37-create-transactions-table.xml"
