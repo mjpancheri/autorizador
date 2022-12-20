@@ -10,7 +10,7 @@ public class CardMapper {
 
   private CardMapper() {}
 
-  public static Card createCardDtoToCard(CreateCardDto createCardDto) {
+  public static Card convertToCard(CreateCardDto createCardDto) {
     BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
 
     if (createCardDto == null) {
@@ -20,17 +20,6 @@ public class CardMapper {
         .number(createCardDto.getNumeroCartao())
         .password(bCryptPasswordEncoder.encode(createCardDto.getSenha()))
         .balance(BigDecimal.valueOf(INITIAL_BALANCE))
-        .build();
-  }
-
-  public static CreateCardDto cardToCreateCardDto(Card card) {
-    if (card == null) {
-      return null;
-    }
-
-    return CreateCardDto.builder()
-        .numeroCartao(card.getNumber())
-        .senha(card.getPassword())
         .build();
   }
 }
