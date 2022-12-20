@@ -7,6 +7,7 @@ import static org.mockito.Mockito.when;
 
 import com.mjpancheri.authorizer.cards.application.rest.builder.CardBuilder;
 import com.mjpancheri.authorizer.cards.domain.repository.CardRepository;
+import com.mjpancheri.authorizer.common.exception.CardIncorrectException;
 import com.mjpancheri.authorizer.common.exception.CardNotFoundException;
 import com.mjpancheri.authorizer.common.exception.CardNumberConflictException;
 import java.util.Optional;
@@ -74,5 +75,68 @@ class CardServiceTest {
     assertThatThrownBy(
         () -> cardService.getBalance(cardNumber)
     ).isInstanceOf(CardNotFoundException.class);
+  }
+
+  @Test
+  @DisplayName("Retorna o cartão quando encontra")
+  void getCardOk() {
+    var card = CardBuilder.getCard();
+
+    when(cardRepository.findByNumber(anyString())).thenReturn(Optional.of(card));
+    var foundCard = cardService.getCard(card.getNumber());
+
+    assertThat(foundCard.getId()).isEqualTo(card.getId());
+  }
+
+  @Test
+  @DisplayName("Retorna erro quando o cartão não existe")
+  void getCardNotFound() {
+    var wrongNumber = "1234123412341234";
+
+    when(cardRepository.findByNumber(anyString())).thenThrow(CardIncorrectException.class);
+
+    assertThatThrownBy(
+        () -> cardService.getCard(wrongNumber)
+    ).isInstanceOf(CardIncorrectException.class);
+  }
+
+  @Test
+  @DisplayName("Retorna true se a senha estiver correta")
+  void validCardPasswordOk() {
+    var card = CardBuilder.getCard();
+    var rightPassword = "1234";
+
+    var valid = cardService.validCardPassword(card, rightPassword);
+
+    assertThat(valid).isTrue();
+  }
+
+  @Test
+  @DisplayName("Retorna false se a senha extiver incorreta")
+  void validCardPasswordWithIncorrectPassword() {
+    var card = CardBuilder.getCard();
+    var wrongPassword = "0000";
+    var valid = cardService.validCardPassword(card, wrongPassword);
+
+    assertThat(valid).isFalse();
+  }
+
+  @Test
+  @DisplayName("Retorna false se o cartão for null")
+  void validCardPasswordWithInvalidCard() {
+
+    var valid = cardService.validCardPassword(null, "1234");
+
+    assertThat(valid).isFalse();
+  }
+
+  @Test
+  @DisplayName("Retorna false se a senha for null")
+  void validCardPasswordWithInvalidPassword() {
+    var card = CardBuilder.getCard();
+
+    var valid = cardService.validCardPassword(card, null);
+
+    assertThat(valid).isFalse();
   }
 }
