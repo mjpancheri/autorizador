@@ -1,6 +1,6 @@
 package com.mjpancheri.authorizer.cards.application.rest.swagger.api;
 
-import com.mjpancheri.authorizer.cards.application.rest.dto.CreateCardDto;
+import com.mjpancheri.authorizer.cards.application.rest.dto.CreateTransactionDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
@@ -8,11 +8,11 @@ import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
-@Tag(name = "Card Api")
-public interface CardApi {
+@Tag(name = "Transaction Api")
+public interface TransactionApi {
 
   @Operation(
-      summary = "Cria um novo cartão com saldo inicial de R$ 500,00.",
+      summary = "Cria uma nova transação subtraindo o valor do saldo do cartão",
       requestBody = @RequestBody(
           required = true,
           content = {
@@ -23,7 +23,8 @@ public interface CardApi {
                           value = """
                               {
                                 "numeroCartao": "1234123412341234",
-                                "senha": "1234"
+                                "senhaCartao": "1234",
+                                "valor": 10.59
                               }
                               """
                       )
@@ -34,17 +35,12 @@ public interface CardApi {
       responses = {
           @ApiResponse(
               responseCode = "201",
-              description = "Cartão criado com sucesso.",
+              description = "Transação criada com sucesso.",
               content = @Content(
-                  mediaType = "application/json",
+                  mediaType = "plan/text",
                   examples = {
                       @ExampleObject(
-                          value = """
-                              {
-                                "numeroCartao": "1234123412341234",
-                                "senha": "1234"
-                              }
-                              """
+                          value = "OK"
                       )
                   }
               )
@@ -67,17 +63,12 @@ public interface CardApi {
           ),
           @ApiResponse(
               responseCode = "422",
-              description = "Cartão já existe.",
+              description = "Problemas com o cartão [SALDO_INSUFICIENTE|SENHA_INVALIDA|CARTAO_INEXISTENTE].",
               content = @Content(
-                  mediaType = "application/json",
+                  mediaType = "plan/text",
                   examples = {
                       @ExampleObject(
-                          value = """
-                              {
-                                "numeroCartao": "1234123412341234",
-                                "senha": "1234"
-                              }
-                              """
+                          value = "SALDO_INSUFICIENTE"
                       )
                   }
               )
@@ -88,40 +79,5 @@ public interface CardApi {
           )
       }
   )
-  CreateCardDto create(CreateCardDto createCardRequest);
-
-  @Operation(
-      summary = "Verifica o saldo do cartão",
-      responses = {
-          @ApiResponse(
-              responseCode = "200",
-              description = "Cartão encontrado.",
-              content = @Content(
-                  examples = {
-                      @ExampleObject(
-                          value = "490.45"
-                      )
-                  }
-              )
-          ),
-          @ApiResponse(
-              responseCode = "400",
-              description = "Não implementado"
-          ),
-          @ApiResponse(
-              responseCode = "404",
-              description = "Cartão não existe"
-          ),
-          @ApiResponse(
-              responseCode = "422",
-              description = "Não implementado"
-          ),
-          @ApiResponse(
-              responseCode = "500",
-              description = "Não implementado"
-          )
-      }
-  )
-  Double balance(String cardNumber);
-
+  String create(CreateTransactionDto createTransactionDto);
 }
