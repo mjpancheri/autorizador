@@ -7,6 +7,7 @@ import com.mjpancheri.authorizer.common.exception.CardNumberConflictException;
 import com.mjpancheri.authorizer.common.exception.ConvertToJsonException;
 import com.mjpancheri.authorizer.common.exception.InsufficientBalanceException;
 import com.mjpancheri.authorizer.common.exception.PasswordIncorrectException;
+import com.mjpancheri.authorizer.common.util.CustomUtils;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -50,18 +51,18 @@ public class ExceptionHandlerController {
   @ExceptionHandler(CardIncorrectException.class)
   @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
   public String handleCardIncorrectException() {
-    return "CARTAO_INEXISTENTE";
+    return CustomUtils.TRANSACTION_INCORRECT_CARD;
   }
 
   @ExceptionHandler(PasswordIncorrectException.class)
   @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
   public String handlePasswordIncorrectException() {
-    return "SENHA_INVALIDA";
+    return CustomUtils.TRANSACTION_INCORRECT_PASSWORD;
   }
 
   @ExceptionHandler(InsufficientBalanceException.class)
   @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
   public String handleInsufficientBalanceException() {
-    return "SALDO_INSUFICIENTE";
+    return CustomUtils.TRANSACTION_INSUFFICIENT_BALANCE;
   }
 }
