@@ -7,7 +7,7 @@ import java.math.BigDecimal;
 public class TransactionMapper {
 
   private TransactionMapper(){}
-  
+
   public static Transaction convertToTransaction(BigDecimal amount, Card card) {
     if (amount == null || card == null) {
       return null;
